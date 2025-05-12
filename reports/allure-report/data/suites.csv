@@ -1,0 +1,3 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"","16447","test_autoliv_login_and_project_selection","Features.Tests","Fri Apr 25 11:19:28 IST 2025","passed","Fri Apr 25 11:19:45 IST 2025","","test_dashboard","",""
+"","4931","test_aib_dashboard_elements","Features.Tests","Fri Apr 25 11:19:45 IST 2025","passed","Fri Apr 25 11:19:50 IST 2025","","test_dashboard","",""
