@@ -1,0 +1,1 @@
+Error during popup close: 'TestDashboardWorkflow' object has no attribute 'find_elements'

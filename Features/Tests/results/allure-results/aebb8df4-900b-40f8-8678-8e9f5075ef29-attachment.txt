@@ -1,0 +1,2 @@
+Clicked calendar trigger
+Clicked 'Today' button
