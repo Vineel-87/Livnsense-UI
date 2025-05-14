@@ -1,0 +1,34 @@
+I have to explain pull there in meeting demo so what cmd i want use ,you can tell..
+if group of people wor Call me haha
+i can well pick up i will clear all doubt network slow?
+
+
+
+
+
+git init // use once for one folde
+
+git add . // add files or all changes (staging)
+
+git commit -m "first commit" // changes will track
+
+above is your doing in local after you want push code to cloud like github
+
+create repo 
+
+rename branch git branch (how to do it here you can show in GitHub)
+simple run one cmd git branch -m new-branch-name old-branch-name
+example you want update master to main
+git branch -m main master(master?)
+
+after run cmd
+git remote "paster url"( which url) https://github.com/Indu61/Student-Management-System.git this simple your repo url(git clone)
+git clone is for some one already created repo you want that repo in your computer run git clone url if you want this project
+then where you want code folder open that path terminal and run git clone https://github.com/Indu61/Student-Management-System.git
+and okay i hv understood now... git remote for connect new repo and local folder
+
+git push origin main ( main is branch name your working on ) or git push
+you can use any one 
+
+thats it,.....But yesterday u used add username , password and all../? thats dont ask again because you using 1st time git so they ask it ..like do you have github accound or not they want know (thats why they ask username and email yu dont need to expalin it in presentationn.>>>okay fine...
+
