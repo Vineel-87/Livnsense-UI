@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Automation Script Launcher</title>
+</head>
+<body>
+    <h1>Run Automation Script by Number</h1>
+    <form method="POST">
+        <label for="script_number">Enter Script Number:</label>
+        <input type="number" name="script_number" required>
+        <button type="submit">Run Script</button>
+    </form>
+
+    {% if message %}
+        <hr>
+        <h3>Result:</h3>
+        <pre>{{ message }}</pre>
+    {% endif %}
+</body>
+</html>

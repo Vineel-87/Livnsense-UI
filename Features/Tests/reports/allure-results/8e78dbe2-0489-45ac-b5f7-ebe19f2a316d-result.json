@@ -1,0 +1,1 @@
+{"name": "test_login_and_project_selection", "status": "passed", "steps": [{"name": "Open browser and go to Autoliv dashboard login", "start": 1747806882663}], "start": 1747806882663, "stop": 1747806884936, "uuid": "0cd8808c-d1a7-478c-834a-08fa18515e85", "testCaseId": "03d3129cc9b01ff60127c7e00ca52058", "fullName": "Test_firstpage#test_login_and_project_selection"}

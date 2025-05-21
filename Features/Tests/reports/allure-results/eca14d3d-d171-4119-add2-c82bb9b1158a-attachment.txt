@@ -1,0 +1,26 @@
+Current date in field: Tue Apr 22 2025 00:00:00 GMT+0
+Failed to reopen calendar: Message: 
+Stacktrace:
+	GetHandleVerifier [0x00007FF746DACF65+75717]
+	GetHandleVerifier [0x00007FF746DACFC0+75808]
+	(No symbol) [0x00007FF746B78F9A]
+	(No symbol) [0x00007FF746BCF4C6]
+	(No symbol) [0x00007FF746BCF77C]
+	(No symbol) [0x00007FF746C22577]
+	(No symbol) [0x00007FF746BF73BF]
+	(No symbol) [0x00007FF746C1F39C]
+	(No symbol) [0x00007FF746BF7153]
+	(No symbol) [0x00007FF746BC0421]
+	(No symbol) [0x00007FF746BC11B3]
+	GetHandleVerifier [0x00007FF7470AD74D+3223469]
+	GetHandleVerifier [0x00007FF7470A7CF2+3200338]
+	GetHandleVerifier [0x00007FF7470C5B23+3322755]
+	GetHandleVerifier [0x00007FF746DC6A3A+180890]
+	GetHandleVerifier [0x00007FF746DCE13F+211359]
+	GetHandleVerifier [0x00007FF746DB52B4+109332]
+	GetHandleVerifier [0x00007FF746DB5462+109762]
+	GetHandleVerifier [0x00007FF746D9BA79+4825]
+	BaseThreadInitThunk [0x00007FFBF516259D+29]
+	RtlUserThreadStart [0x00007FFBF66CAF58+40]
+
+Testing with date range: 21/05/2025 - 20/04/2025
