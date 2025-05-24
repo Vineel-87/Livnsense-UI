@@ -2,3 +2,6 @@ Flask
 pytest
 selenium
 allure-pytest
+python
+behave
+requests
