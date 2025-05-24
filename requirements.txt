@@ -2,6 +2,6 @@ Flask
 pytest
 selenium
 allure-pytest
-python
+python-dotenv==1.0.1   
 behave
 requests
