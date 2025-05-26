@@ -1,3 +1,0 @@
-Today button worked successfully
-Week button worked successfully. Selected range: 13-05-2025 - 19-05-2025
-Month button worked successfully. Selected: 20-04-2025 - 19-05-2025

@@ -21,14 +21,17 @@ IF EXIST ".venv\Scripts\activate.bat" (
 REM Go to the test folder
 cd Features\Tests
 
-REM Run all Python test files using pytest and generate Allure results
-echo Running Pytest test scripts...
-pytest --alluredir=reports\allure-results
+REM Run all test files with names like 1_test_*.py, 2_test_*.py, etc.
+echo Running Pytest test scripts on all numbered test files...
+pytest --alluredir=reports\allure-results --clean-alluredir
 
-REM Serve the Allure report
+REM Generate Allure Report
 IF EXIST "reports\allure-results" (
-    echo Launching Allure Report...
-    allure serve reports\allure-results
+    echo Generating Allure Report...
+    ..\..\allure-2.17.0\bin\allure generate reports\allure-results -o reports\allure-report --clean
+
+    echo Launching Allure Report in Browser...
+    ..\..\allure-2.17.0\bin\allure open reports\allure-report
 ) ELSE (
     echo WARNING: Allure results not found!
 )

@@ -2,6 +2,9 @@ Flask
 pytest
 selenium
 allure-pytest
+<<<<<<< HEAD
 python-dotenv==1.0.1   
 behave
 requests
+=======
+>>>>>>> 64e5c36 (new Update 2605)

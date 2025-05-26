@@ -35,10 +35,10 @@ def test_autoliv_login_and_project_selection(driver):
         username = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.XPATH, "//input[@placeholder='Username']"))
         )
-        username.send_keys("madan")
+        username.send_keys("pydi.vineel")
 
         password = driver.find_element(By.XPATH, "//input[@placeholder='Password']")
-        password.send_keys("Madan@123")
+        password.send_keys("Vineel@lns123")
 
         signin_btn = driver.find_element(By.XPATH, "//button[contains(text(), 'Sign In')]")
         signin_btn.click()

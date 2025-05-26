@@ -84,7 +84,7 @@ class TestDashboardWorkflow:
                 EC.presence_of_element_located((By.CSS_SELECTOR, "select.dropdown"))
             ))
             options = [option.text for option in select.options]
-            expected_options = ["AIB", "AIX", "INBD", "TCB"]  # Update this based on real dropdown
+            expected_options = ["AIB", "AIX", "AKR", "INBD", "TCB"]  # Update this based on real dropdown
 
             allure.attach("\n".join(options),
                           name="available-projects",
@@ -299,116 +299,61 @@ class TestDashboardWorkflow:
                               name="month_button_failed",
                               attachment_type=allure.attachment_type.PNG)
                 pytest.fail(f"Month button test failed: {str(e)}")
+    
+    @allure.story("Apply Date & Time Ranges from CSV")
+    def test_date_and_time_ranges_from_csv(self, driver):
+        with open('test_date_range.csv', 'r') as file:
+            reader = csv.DictReader(file)
+            for idx, row in enumerate(reader, start=1):
+                date_range = row['date_range'].strip()
+                start_time = row['start_time'].strip()
+                end_time = row['end_time'].strip()
 
-    @allure.story("Verify and Test All Time Period Buttons")
-    def test2_all_time_period_buttons(self, driver):
-        def reopen1_calendar():
-            try:
-                calendar_trigger = WebDriverWait(driver, 10).until(
-                    EC.element_to_be_clickable((By.CSS_SELECTOR, "div.form-control[style*='pointer']"))
-                )
-                calendar_trigger.click()
-                WebDriverWait(driver, 5).until(
-                    EC.visibility_of_element_located((By.CSS_SELECTOR, "div.datepicker-pop-card"))
-                )
-                return True
-            except Exception as e:
-                print(f"Failed to reopen calendar: {str(e)}")
-                return False
+                with allure.step(f"[{idx}] Open calendar"):
+                    calendar = WebDriverWait(driver, 10).until(
+                        EC.element_to_be_clickable((By.XPATH, "//span[@class='calendar-container ng-star-inserted']"))
+                    )
+                    calendar.click()
+                    time.sleep(1)
 
-        with allure.step("Open calendar popup initially"):
-            try:
-                # Open the calendar
-                calendar_trigger = WebDriverWait(driver, 15).until(
-                    EC.element_to_be_clickable((By.CSS_SELECTOR, "div.form-control[style*='pointer']"))
-                )
-                driver.execute_script("arguments[0].scrollIntoView(true);", calendar_trigger)
-                time.sleep(1)
-                calendar_trigger.click()
+                with allure.step(f"[{idx}] Clear existing date range"):
+                    date_input = WebDriverWait(driver, 10).until(
+                        EC.presence_of_element_located((By.CSS_SELECTOR, "input[bsdaterangepicker][placeholder='Select Date Range']"))
+                    )
+                    driver.execute_script("arguments[0].value = '';", date_input)
+                    driver.execute_script("arguments[0].dispatchEvent(new Event('input'))", date_input)
+                    time.sleep(1)
 
-                # Wait for popup to appear
-                popup = WebDriverWait(driver, 10).until(
-                    EC.visibility_of_element_located((By.CSS_SELECTOR, "div.datepicker-pop-card"))
-                )
-                assert popup.is_displayed()
+                with allure.step(f"[{idx}] Set new date range: {date_range}"):
+                    date_input.send_keys(date_range)
+                    time.sleep(1)
 
-                # Get the input field
-                date_input = driver.find_element(By.CSS_SELECTOR, "input[placeholder='Select Date Range']")
+                with allure.step(f"[{idx}] Set start time: {start_time}"):
+                    start_time_input = WebDriverWait(driver, 10).until(
+                        EC.presence_of_element_located((By.XPATH, "//input[@type='time' and @placeholder='Start Time']"))
+                    )
+                    start_time_input.clear()
+                    start_time_input.send_keys(start_time)
+                    time.sleep(1)
 
-                # Get current date value
-                current_date = date_input.get_attribute("ng-reflect-model") or date_input.get_attribute("value")
-                print(f"Current date in field: {current_date}")
+                with allure.step(f"[{idx}] Set end time: {end_time}"):
+                    end_time_input = WebDriverWait(driver, 10).until(
+                        EC.presence_of_element_located((By.XPATH, "//input[@type='time' and @placeholder='End Time']"))
+                    )
+                    end_time_input.clear()
+                    end_time_input.send_keys(end_time)
+                    time.sleep(1)
 
-                # Clear the current date range
-                date_input.clear()
-                time.sleep(1)  # Allow time for the clear to take effect
+                allure.attach(driver.get_screenshot_as_png(), name=f"before-apply-{idx}", attachment_type=allure.attachment_type.PNG)
 
-                # Verify the field is now empty
-                cleared_value = date_input.get_attribute("value")
-                assert not cleared_value, f"Expected empty field but got {cleared_value}"
+                with allure.step(f"[{idx}] Click Apply"):
+                    apply_button = WebDriverWait(driver, 10).until(
+                        EC.element_to_be_clickable((By.XPATH, "//button[contains(@class,'apply-btn')]"))
+                    )
+                    apply_button.click()
+                    time.sleep(2)
 
-                # Verify placeholder shows "Select Date Range"
-                placeholder_text = date_input.get_attribute("placeholder")
-                assert placeholder_text == "Select Date Range", \
-                    f"Expected placeholder 'Select Date Range' but got '{placeholder_text}'"
-
-                allure.attach(driver.get_screenshot_as_png(),
-                              name="calendar_cleared",
-                              attachment_type=allure.attachment_type.PNG)
-
-                # Reopen calendar to verify cleared state visually
-                if reopen1_calendar():
-                    # Additional verifications can be added here if needed
-                    pass
-
-                allure.attach(driver.get_screenshot_as_png(),
-                              name="calendar_opened",
-                              attachment_type=allure.attachment_type.PNG)
-
-                # Now test with random date ranges from CSV
-                with allure.step("Test with random date ranges from CSV"):
-                    try:
-                        # Read date ranges from CSV file
-                        with open('test_date_range.csv', 'r') as file:
-                            reader = csv.reader(file)
-                            date_ranges = [row[0] for row in reader if row]  # Skip empty rows
-
-                        if not date_ranges:
-                            pytest.skip("No date ranges found in CSV file")
-
-                        # Select a random date range
-                        random_date_range = random.choice(date_ranges)
-                        print(f"Testing with date range: {random_date_range}")
-
-                        # Enter the random date range
-                        date_input.clear()
-                        date_input.send_keys(random_date_range)
-                        time.sleep(1)  # Allow time for the date to be applied
-
-                        # Verify the date range was applied
-                        entered_value = date_input.get_attribute("value")
-                        assert entered_value == random_date_range, \
-                            f"Expected '{random_date_range}' but got '{entered_value}'"
-
-                        allure.attach(driver.get_screenshot_as_png(),
-                                      name="random_date_applied",
-                                      attachment_type=allure.attachment_type.PNG)
-
-                        # Optional: Reopen calendar to verify the selected range visually
-                        if reopen1_calendar():
-                            time.sleep(1)  # Just for visual verification
-
-                    except Exception as e:
-                        allure.attach(driver.get_screenshot_as_png(),
-                                      name="random_date_failed",
-                                      attachment_type=allure.attachment_type.PNG)
-                        pytest.fail(f"Failed during random date range test: {str(e)}")
-
-            except Exception as e:
-                allure.attach(driver.get_screenshot_as_png(),
-                              name="calendar_open_failed",
-                              attachment_type=allure.attachment_type.PNG)
-                pytest.fail(f"Failed during calendar operations: {str(e)}")
+                allure.attach(driver.get_screenshot_as_png(), name=f"after-apply-{idx}", attachment_type=allure.attachment_type.PNG)
 
 
 

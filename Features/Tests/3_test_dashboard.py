@@ -24,8 +24,8 @@ def test_autoliv_login_and_project_selection(driver):
         driver.get("https://alv-vicas.livnsense.com/#/auth/login")
 
     with allure.step("Login to Autoliv"):
-        driver.find_element(By.XPATH, "//input[@placeholder='Username']").send_keys("madan")
-        driver.find_element(By.XPATH, "//input[@placeholder='Password']").send_keys("Madan@123")
+        driver.find_element(By.XPATH, "//input[@placeholder='Username']").send_keys("pydi.vineel")
+        driver.find_element(By.XPATH, "//input[@placeholder='Password']").send_keys("Vineel@lns123")
         driver.find_element(By.XPATH, "//button[contains(text(), 'Sign In')]").click()
 
     with allure.step("Verify Autoliv logo is displayed"):

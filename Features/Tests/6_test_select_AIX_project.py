@@ -1,7 +1,11 @@
 import pytest
 import allure
 import time
+import csv
+import os
+import random
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
@@ -12,7 +16,17 @@ class TestDashboardWorkflow:
 
     @pytest.fixture(scope="class")
     def driver(self):
-        driver = webdriver.Chrome()
+        options = Options()
+        # Add all your clean options here exactly as in your first script
+        options.add_experimental_option("excludeSwitches", ["enable-automation"])
+        options.add_experimental_option("useAutomationExtension", False)
+        options.add_argument("--no-default-browser-check")
+        options.add_argument("--disable-extensions")
+        options.add_argument("--disable-infobars")
+        options.add_argument("--disable-blink-features=AutomationControlled")
+        options.add_argument("--incognito")
+
+        driver = webdriver.Chrome(options=options)
         driver.maximize_window()
         yield driver
         driver.quit()
@@ -45,6 +59,7 @@ class TestDashboardWorkflow:
             allure.attach(driver.get_screenshot_as_png(),
                           name="dashboard-loaded",
                           attachment_type=allure.attachment_type.PNG)
+
 
     @allure.story("Project Selection")  # Scenario: Project Selection
     def test_project_selection(self, driver):
@@ -79,7 +94,7 @@ class TestDashboardWorkflow:
                 EC.presence_of_element_located((By.CSS_SELECTOR, "select.dropdown"))
             ))
             options = [option.text for option in select.options]
-            expected_options = ["AIB", "AIX", "INBD", "TCB"]  # Update this based on real dropdown
+            expected_options = ["AIB", "AIX", "AKR", "INBD", "TCB"]  # Update this based on real dropdown
 
             allure.attach("\n".join(options),
                           name="available-projects",
@@ -352,6 +367,62 @@ class TestDashboardWorkflow:
                               name="month_button_failed",
                               attachment_type=allure.attachment_type.PNG)
                 pytest.fail(f"Month button test failed: {str(e)}")
+                
+    @allure.story("Apply Date & Time Ranges from CSV")
+    def test_date_and_time_ranges_from_csv(self, driver):
+        with open('test_date_range.csv', 'r') as file:
+            reader = csv.DictReader(file)
+            for idx, row in enumerate(reader, start=1):
+                date_range = row['date_range'].strip()
+                start_time = row['start_time'].strip()
+                end_time = row['end_time'].strip()
+
+                with allure.step(f"[{idx}] Open calendar"):
+                    calendar = WebDriverWait(driver, 10).until(
+                        EC.element_to_be_clickable((By.XPATH, "//span[@class='calendar-container ng-star-inserted']"))
+                    )
+                    calendar.click()
+                    time.sleep(1)
+
+                with allure.step(f"[{idx}] Clear existing date range"):
+                    date_input = WebDriverWait(driver, 10).until(
+                        EC.presence_of_element_located((By.CSS_SELECTOR, "input[bsdaterangepicker][placeholder='Select Date Range']"))
+                    )
+                    driver.execute_script("arguments[0].value = '';", date_input)
+                    driver.execute_script("arguments[0].dispatchEvent(new Event('input'))", date_input)
+                    time.sleep(1)
+
+                with allure.step(f"[{idx}] Set new date range: {date_range}"):
+                    date_input.send_keys(date_range)
+                    time.sleep(1)
+
+                with allure.step(f"[{idx}] Set start time: {start_time}"):
+                    start_time_input = WebDriverWait(driver, 10).until(
+                        EC.presence_of_element_located((By.XPATH, "//input[@type='time' and @placeholder='Start Time']"))
+                    )
+                    start_time_input.clear()
+                    start_time_input.send_keys(start_time)
+                    time.sleep(1)
+
+                with allure.step(f"[{idx}] Set end time: {end_time}"):
+                    end_time_input = WebDriverWait(driver, 10).until(
+                        EC.presence_of_element_located((By.XPATH, "//input[@type='time' and @placeholder='End Time']"))
+                    )
+                    end_time_input.clear()
+                    end_time_input.send_keys(end_time)
+                    time.sleep(1)
+
+                allure.attach(driver.get_screenshot_as_png(), name=f"before-apply-{idx}", attachment_type=allure.attachment_type.PNG)
+
+                with allure.step(f"[{idx}] Click Apply"):
+                    apply_button = WebDriverWait(driver, 10).until(
+                        EC.element_to_be_clickable((By.XPATH, "//button[contains(@class,'apply-btn')]"))
+                    )
+                    apply_button.click()
+                    time.sleep(2)
+
+                allure.attach(driver.get_screenshot_as_png(), name=f"after-apply-{idx}", attachment_type=allure.attachment_type.PNG)
+    
 
     @allure.story("Verify Incidents Distribution Elements")
     def test_incidents_distribution_names(self, driver):
@@ -359,7 +430,7 @@ class TestDashboardWorkflow:
             expected_names = {
                 "Incidents Distribution": "//div[contains(@class, 'card_heading')]",
                 "Total": "//span[contains(@class, 'table_heading')]/span[contains(., 'Total')]",
-                "Pedestrian": "//span[contains(@class, 'table_heading')]/span[contains(., 'Total PPE')]",
+                "Total PPE": "//span[contains(@class, 'table_heading')]/span[contains(., 'Total PPE')]",
                 "Vest": "//span[contains(@class, 'table_heading')]/span[contains(., 'Vest')]",
                 "Safety Shoe": "//span[contains(@class, 'table_heading')]/span[contains(., 'Safety-Shoe')]",
                 "Helmet": "//span[contains(@class, 'table_heading')]/span[contains(., 'Helmet')]"
