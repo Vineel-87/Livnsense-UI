@@ -85,3 +85,32 @@ class TestDashboardWorkflow:
                     time.sleep(2)
 
                 allure.attach(driver.get_screenshot_as_png(), name=f"after-apply-{idx}", attachment_type=allure.attachment_type.PNG)
+    
+    
+    @allure.story("User Sign Out")  # Scenario: User Sign Out
+    def test_sign_out(self, driver):
+        with allure.step("Click user dropdown"):
+            dropdown_icon = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.CSS_SELECTOR, "svg.bi-chevron-down"))
+        )
+        dropdown_icon.click()
+        allure.attach(driver.get_screenshot_as_png(),
+                      name="dropdown-opened",
+                      attachment_type=allure.attachment_type.PNG)
+
+        with allure.step("Click sign out button"):
+            signout_button = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.XPATH, "//button[contains(@class, 'sign-out-btn')]"))
+        )
+        signout_button.click()
+        allure.attach(driver.get_screenshot_as_png(),
+                      name="signout-clicked",
+                      attachment_type=allure.attachment_type.PNG)
+
+        with allure.step("Verify sign out successful"):
+            WebDriverWait(driver, 10).until(
+            EC.url_contains("/auth/login")
+        )
+        allure.attach(driver.get_screenshot_as_png(),
+                      name="signout-confirmed",
+                      attachment_type=allure.attachment_type.PNG)

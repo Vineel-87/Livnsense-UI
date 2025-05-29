@@ -1,28 +1,37 @@
 import pytest
 import allure
 import time
-import  csv
+import csv
 import os
 import random
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
-
-
 
 @allure.feature("Dashboard Workflow")  # Feature: Dashboard Workflow
 class TestDashboardWorkflow:
 
     @pytest.fixture(scope="class")
     def driver(self):
-        driver = webdriver.Chrome()
+        options = Options()
+        # Add all your clean options here exactly as in your first script
+        options.add_experimental_option("excludeSwitches", ["enable-automation"])
+        options.add_experimental_option("useAutomationExtension", False)
+        options.add_argument("--no-default-browser-check")
+        options.add_argument("--disable-extensions")
+        options.add_argument("--disable-infobars")
+        options.add_argument("--disable-blink-features=AutomationControlled")
+        options.add_argument("--incognito")
+
+        driver = webdriver.Chrome(options=options)
         driver.maximize_window()
         yield driver
         driver.quit()
 
-    @allure.story("Successful Login")
+    @allure.story("Successful Login")  # Scenario: Successful Login
     def test_login(self, driver):
         with allure.step("Navigate to login page"):
             driver.get("https://alv-vicas.livnsense.com/#/auth/login")
@@ -391,3 +400,30 @@ class TestDashboardWorkflow:
 
             assert not missing_names, f"Missing names: {missing_names}"
 
+    @allure.story("User Sign Out")  # Scenario: User Sign Out
+    def test_sign_out(self, driver):
+        with allure.step("Click user dropdown"):
+            dropdown_icon = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.CSS_SELECTOR, "svg.bi-chevron-down"))
+        )
+        dropdown_icon.click()
+        allure.attach(driver.get_screenshot_as_png(),
+                      name="dropdown-opened",
+                      attachment_type=allure.attachment_type.PNG)
+
+        with allure.step("Click sign out button"):
+            signout_button = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.XPATH, "//button[contains(@class, 'sign-out-btn')]"))
+        )
+        signout_button.click()
+        allure.attach(driver.get_screenshot_as_png(),
+                      name="signout-clicked",
+                      attachment_type=allure.attachment_type.PNG)
+
+        with allure.step("Verify sign out successful"):
+            WebDriverWait(driver, 10).until(
+            EC.url_contains("/auth/login")
+        )
+        allure.attach(driver.get_screenshot_as_png(),
+                      name="signout-confirmed",
+                      attachment_type=allure.attachment_type.PNG)

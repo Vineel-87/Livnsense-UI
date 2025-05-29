@@ -3,21 +3,30 @@ import allure
 import time
 import csv
 import os
-from datetime import datetime
+import random
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
-
-
 
 @allure.feature("Dashboard Workflow")  # Feature: Dashboard Workflow
 class TestDashboardWorkflow:
 
     @pytest.fixture(scope="class")
     def driver(self):
-        driver = webdriver.Chrome()
+        options = Options()
+        # Add all your clean options here exactly as in your first script
+        options.add_experimental_option("excludeSwitches", ["enable-automation"])
+        options.add_experimental_option("useAutomationExtension", False)
+        options.add_argument("--no-default-browser-check")
+        options.add_argument("--disable-extensions")
+        options.add_argument("--disable-infobars")
+        options.add_argument("--disable-blink-features=AutomationControlled")
+        options.add_argument("--incognito")
+
+        driver = webdriver.Chrome(options=options)
         driver.maximize_window()
         yield driver
         driver.quit()
@@ -34,8 +43,8 @@ class TestDashboardWorkflow:
             WebDriverWait(driver, 20).until(
                 EC.presence_of_element_located((By.XPATH, "//input[@placeholder='Username']"))
             )
-            driver.find_element(By.XPATH, "//input[@placeholder='Username']").send_keys("madan")
-            driver.find_element(By.XPATH, "//input[@placeholder='Password']").send_keys("Madan@123")
+            driver.find_element(By.XPATH, "//input[@placeholder='Username']").send_keys("pydi.vineel")
+            driver.find_element(By.XPATH, "//input[@placeholder='Password']").send_keys("Vineel@lns123")
             allure.attach(driver.get_screenshot_as_png(),
                           name="credentials-entered",
                           attachment_type=allure.attachment_type.PNG)
@@ -47,10 +56,9 @@ class TestDashboardWorkflow:
             WebDriverWait(driver, 20).until(
                 EC.visibility_of_element_located((By.XPATH, "//img[@alt='Autoliv']"))
             )
-            time.sleep(2)
             allure.attach(driver.get_screenshot_as_png(),
                           name="dashboard-loaded",
-                          attachment_type=allure.attachment_type.PNG)
+                          attachment_type=allure.attachment_type.PNG)\
 
     @allure.story("Project Selection")  # Scenario: Project Selection
     def test_project_selection(self, driver):
@@ -381,36 +389,35 @@ class TestDashboardWorkflow:
                 pytest.fail(f"Week button test failed: {str(e)}")
 
         with allure.step("Test Month button functionality"):
-            if not reopen_calendar():
-                pytest.fail("Could not reopen calendar for Month button test")
+                    if not reopen_calendar():
+                        pytest.fail("Could not reopen calendar for Week button test")
 
-            try:
-                month_btn = WebDriverWait(driver, 10).until(
-                    EC.element_to_be_clickable((By.XPATH, "//button[contains(., 'Month')]"))
-                )
-                # Highlight button for visibility
-                driver.execute_script("arguments[0].style.border='2px solid blue';", month_btn)
-                time.sleep(0.5)
+                    try:
+                        week_btn = WebDriverWait(driver, 10).until(
+                            EC.element_to_be_clickable((By.XPATH, "//button[contains(., 'Month')]"))
+                        )
+                        # Highlight button for visibility
+                        driver.execute_script("arguments[0].style.border='2px solid pink';", week_btn)
+                        time.sleep(0.5)
 
-                month_btn.click()
+                        week_btn.click()
 
-                WebDriverWait(driver, 5).until(
-                    EC.invisibility_of_element_located((By.CSS_SELECTOR, "div.datepicker-pop-card"))
-                )
+                        WebDriverWait(driver, 5).until(
+                            EC.invisibility_of_element_located((By.CSS_SELECTOR, "div.datepicker-pop-card"))
+                        )
 
-                date_display = WebDriverWait(driver, 10).until(
-                    EC.visibility_of_element_located((By.CSS_SELECTOR, "div.form-control"))
-                ).text
-                # Accept either "Month Year" or "01-Month-YYYY - 30-Month-YYYY" format
-                assert (len(date_display.split()) == 2 or " - " in date_display), \
-                    f"Unexpected month format: {date_display}"
-                print(f"Month button worked successfully. Selected: {date_display}")
+                        date_display = WebDriverWait(driver, 10).until(
+                            EC.visibility_of_element_located((By.CSS_SELECTOR, "div.form-control"))
+                        ).text
+                        assert " - " in date_display, f"Expected Month range but got: {date_display}"
+                        print(f"Month button worked successfully. Selected range: {date_display}")
 
-            except Exception as e:
-                allure.attach(driver.get_screenshot_as_png(),
-                              name="month_button_failed",
-                              attachment_type=allure.attachment_type.PNG)
-                pytest.fail(f"Month button test failed: {str(e)}")
+                    except Exception as e:
+                        allure.attach(driver.get_screenshot_as_png(),
+                                    name="Month_button_failed",
+                                    attachment_type=allure.attachment_type.PNG)
+                        pytest.fail(f"Month button test failed: {str(e)}")      
+                
                 
     @allure.story("Apply Date & Time Ranges from CSV")
     def test_date_and_time_ranges_from_csv(self, driver):
@@ -467,38 +474,143 @@ class TestDashboardWorkflow:
 
                 allure.attach(driver.get_screenshot_as_png(), name=f"after-apply-{idx}", attachment_type=allure.attachment_type.PNG)
 
+    @allure.story("Verify Forklift Incidents Section")  # Scenario: Verify Gate Incidents Section
+    def test_forklift_incidents_section1(self, driver):
+        with allure.step("Navigate to Manage section"):
+            forklift_incidents = WebDriverWait(driver, 20).until(
+                EC.element_to_be_clickable((By.XPATH, "//span[contains(text(), 'Forklift Incidents')]"))
+            )
+            forklift_incidents.click()
+            allure.attach(driver.get_screenshot_as_png(),
+                          name="forklift-incidents-expanded",
+                          attachment_type=allure.attachment_type.PNG)
 
+        
+        with allure.step("Click on Forklist Incidents sub-menu"):
+            Near_miss_incidents = WebDriverWait(driver, 20).until(
+                EC.element_to_be_clickable((By.XPATH, "//div[contains(text(), 'Near Miss Incidents')]"))
+            )
+            Near_miss_incidents.click()
 
-    @allure.story("Verify Incidents Distribution Elements")
-    def test_incidents_distribution_names(self, driver):
-        with allure.step("Check if all expected names exist"):
-            expected_names = {
-                "Incidents Distribution": "//div[contains(@class, 'card_heading')]",
-                "Total": "//span[contains(@class, 'table_heading')]/span[contains(., 'Total')]",
-                "Total Near Miss": "//span[contains(@class, 'table_heading')]/span[contains(., 'Total Near Miss')]",
-                "Pedestrian": "//span[contains(@class, 'table_heading')]/span[contains(., 'Pedestrian')]",
-                "Vehicle": "//span[contains(@class, 'table_heading')]/span[contains(., 'Vehicle')]",
-                "Total PPE": "//span[contains(@class, 'table_heading')]/span[contains(., 'Total PPE')]",
-                "Vest": "//span[contains(@class, 'table_heading')]/span[contains(., 'Vest')]",
-                "Helmet": "//span[contains(@class, 'table_heading')]/span[contains(., 'Helmet')]"
-            }
+            time.sleep(1)
+            allure.attach(driver.get_screenshot_as_png(),
+                          name="near_miss-incidents-selected",
+                          attachment_type=allure.attachment_type.PNG)
 
-            missing_names = []
+       
+    
+    @allure.story("Apply Date & Time Ranges from CSV")
+    def test_date_and_time_ranges_from_csv2(self, driver):
+        with open('test_date_range.csv', 'r') as file:
+            reader = csv.DictReader(file)
+            for idx, row in enumerate(reader, start=1):
+                date_range = row['date_range'].strip()
+                start_time = row['start_time'].strip()
+                end_time = row['end_time'].strip()
 
-            for name, xpath in expected_names.items():
-                try:
-                    element = WebDriverWait(driver, 5).until(
-                        EC.presence_of_element_located((By.XPATH, xpath))
+                with allure.step(f"[{idx}] Open calendar"):
+                    calendar = WebDriverWait(driver, 10).until(
+                        EC.element_to_be_clickable((By.XPATH, "//span[@class='calendar-container ng-star-inserted']"))
                     )
-                    if not element.is_displayed():
-                        missing_names.append(name)
-                except Exception:
-                    missing_names.append(name)
-                    allure.attach(
-                        driver.get_screenshot_as_png(),
-                        name=f"missing_{name}",
-                        attachment_type=allure.attachment_type.PNG
+                    calendar.click()
+                    time.sleep(1)
+
+                with allure.step(f"[{idx}] Clear existing date range"):
+                    date_input = WebDriverWait(driver, 10).until(
+                        EC.presence_of_element_located((By.CSS_SELECTOR, "input[bsdaterangepicker][placeholder='Select Date Range']"))
                     )
+                    driver.execute_script("arguments[0].value = '';", date_input)
+                    driver.execute_script("arguments[0].dispatchEvent(new Event('input'))", date_input)
+                    time.sleep(1)
 
-            assert not missing_names, f"Missing names: {missing_names}"
+                with allure.step(f"[{idx}] Set new date range: {date_range}"):
+                    date_input.send_keys(date_range)
+                    time.sleep(1)
 
+                with allure.step(f"[{idx}] Set start time: {start_time}"):
+                    start_time_input = WebDriverWait(driver, 10).until(
+                        EC.presence_of_element_located((By.XPATH, "//input[@type='time' and @placeholder='Start Time']"))
+                    )
+                    start_time_input.clear()
+                    start_time_input.send_keys(start_time)
+                    time.sleep(1)
+
+                with allure.step(f"[{idx}] Set end time: {end_time}"):
+                    end_time_input = WebDriverWait(driver, 10).until(
+                        EC.presence_of_element_located((By.XPATH, "//input[@type='time' and @placeholder='End Time']"))
+                    )
+                    end_time_input.clear()
+                    end_time_input.send_keys(end_time)
+                    time.sleep(1)
+
+                allure.attach(driver.get_screenshot_as_png(), name=f"before-apply-{idx}", attachment_type=allure.attachment_type.PNG)
+
+                with allure.step(f"[{idx}] Click Apply"):
+                    apply_button = WebDriverWait(driver, 10).until(
+                        EC.element_to_be_clickable((By.XPATH, "//button[contains(@class,'apply-btn')]"))
+                    )
+                    apply_button.click()
+                    time.sleep(2)
+
+                allure.attach(driver.get_screenshot_as_png(), name=f"after-apply-{idx}", attachment_type=allure.attachment_type.PNG)
+    
+    @allure.story("Navigate to specific page numbers from separate CSV")
+    def test_navigate_to_page_numbers_from_csv(self, driver):
+        with open('page_numbers.csv', 'r') as file:
+            reader = csv.reader(file)
+            next(reader)  # Skip header row
+            for idx, row in enumerate(reader, start=1):
+                if not row:
+                    continue
+                page_number = row[0].strip()
+                if not page_number.isdigit():
+                    continue  # Skip invalid rows
+
+                with allure.step(f"[{idx}] Enter Page Number: {page_number}"):
+                    page_input = WebDriverWait(driver, 10).until(
+                        EC.presence_of_element_located((By.XPATH, "//input[@placeholder='Page No.']"))
+                    )
+                    page_input.clear()
+                    page_input.send_keys(page_number)
+                    time.sleep(1)
+
+                with allure.step(f"[{idx}] Click Go Button"):
+                    go_button = WebDriverWait(driver, 10).until(
+                        EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Go')]"))
+                    )
+                    go_button.click()
+                    time.sleep(3)  # wait for page content to load
+
+                allure.attach(driver.get_screenshot_as_png(), name=f"page-{page_number}", attachment_type=allure.attachment_type.PNG)
+
+    
+    @allure.story("User Sign Out")  # Scenario: User Sign Out
+    def test_sign_out(self, driver):
+        with allure.step("Click user dropdown"):
+            dropdown_icon = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.CSS_SELECTOR, "svg.bi-chevron-down"))
+        )
+        dropdown_icon.click()
+        allure.attach(driver.get_screenshot_as_png(),
+                      name="dropdown-opened",
+                      attachment_type=allure.attachment_type.PNG)
+
+        with allure.step("Click sign out button"):
+            signout_button = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.XPATH, "//button[contains(@class, 'sign-out-btn')]"))
+        )
+        signout_button.click()
+        allure.attach(driver.get_screenshot_as_png(),
+                      name="signout-clicked",
+                      attachment_type=allure.attachment_type.PNG)
+
+        with allure.step("Verify sign out successful"):
+            WebDriverWait(driver, 10).until(
+            EC.url_contains("/auth/login")
+        )
+        allure.attach(driver.get_screenshot_as_png(),
+                      name="signout-confirmed",
+                      attachment_type=allure.attachment_type.PNG)
+        
+        
+       

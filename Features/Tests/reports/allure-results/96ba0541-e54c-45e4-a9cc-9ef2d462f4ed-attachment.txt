@@ -1,0 +1,2 @@
+Retrying vehicle selection (attempt 1)
+Retrying vehicle selection (attempt 2)

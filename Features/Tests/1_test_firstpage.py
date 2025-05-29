@@ -18,8 +18,8 @@ def test_login_and_project_selection():
             WebDriverWait(driver, 20).until(
                 EC.presence_of_element_located((By.XPATH, "//input[@placeholder='Username']"))
             )
-            driver.find_element(By.XPATH, "//input[@placeholder='Username']").send_keys("madan")
-            driver.find_element(By.XPATH, "//input[@placeholder='Password']").send_keys("Madan@123")
+            driver.find_element(By.XPATH, "//input[@placeholder='Username']").send_keys("pydi.vineel")
+            driver.find_element(By.XPATH, "//input[@placeholder='Password']").send_keys("vineel@lns123")
             driver.find_element(By.XPATH, "//button[contains(text(), 'Sign In')]").click()
 
         with allure.step("Verify Autoliv logo is visible"):

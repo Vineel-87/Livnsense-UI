@@ -25,19 +25,15 @@ REM Run all test files with names like 1_test_*.py, 2_test_*.py, etc.
 echo Running Pytest test scripts on all numbered test files...
 pytest --alluredir=reports\allure-results --clean-alluredir
 
-REM Generate Allure Report
-IF EXIST "reports\allure-results" (
-    echo Generating Allure Report...
-    ..\..\allure-2.17.0\bin\allure generate reports\allure-results -o reports\allure-report --clean
+echo ========================================================
+echo Generating Allure Report...
 
-    echo Launching Allure Report in Browser...
-    ..\..\allure-2.17.0\bin\allure open reports\allure-report
-) ELSE (
-    echo WARNING: Allure results not found!
-)
+REM Generate the report from the correct path
+allure generate reports\allure-results -o reports\allure-report --clean
 
-echo.
-echo ========================================
-echo Test execution finished.
-echo ========================================
+echo Launching Allure Report in Browser...
+allure open reports\allure-report
+
 pause
+
+

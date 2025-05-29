@@ -1,5 +1,0 @@
-AIB
-AIX
-AKR
-INBD
-TCB
