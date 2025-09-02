@@ -1,0 +1,20 @@
+Error during popup close: Message: invalid session id
+Stacktrace:
+	GetHandleVerifier [0x00007FF6D24BCF45+75717]
+	GetHandleVerifier [0x00007FF6D24BCFA0+75808]
+	(No symbol) [0x00007FF6D2288DCC]
+	(No symbol) [0x00007FF6D22CF54F]
+	(No symbol) [0x00007FF6D2307242]
+	(No symbol) [0x00007FF6D2301C63]
+	(No symbol) [0x00007FF6D2300D29]
+	(No symbol) [0x00007FF6D2255A55]
+	GetHandleVerifier [0x00007FF6D27BD71D+3223453]
+	GetHandleVerifier [0x00007FF6D27B7CC2+3200322]
+	GetHandleVerifier [0x00007FF6D27D5AF3+3322739]
+	GetHandleVerifier [0x00007FF6D24D6A1A+180890]
+	GetHandleVerifier [0x00007FF6D24DE11F+211359]
+	(No symbol) [0x00007FF6D2254AC8]
+	GetHandleVerifier [0x00007FF6D28A6FC8+4180040]
+	BaseThreadInitThunk [0x00007FF9892F259D+29]
+	RtlUserThreadStart [0x00007FF98A02AF58+40]
+

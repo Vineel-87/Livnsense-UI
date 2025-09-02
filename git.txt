@@ -1,0 +1,23 @@
+open folder you want push it in GitHub open terminal in folder path like C:\Users\User\PycharmProjects\LivnsenseTestingBDD. ? yes
+
+to initiaze git
+git init ( you once for one folder)
+to check git is initized or not run git status  it will show branch like On branch main 
+
+you added some files in folder to trach changes you need to add this files in git
+run git add . (to add all files)
+if to want add specific file git add file_name (git add file_name)....? i hv to create a repo in GitHub ? first work n local
+
+git commit -m "give msg what you worked on that files"
+
+after create repo in GitHub
+
+update branch name....? branch name like? when you initialize git by default branch name will be master before adding it in GitHub you need to update branch name master to main (it is git and GitHub controversy check it in google ).....Like can you show example here how to go 
+main is main branch other branches are sub branches ....where it is ?here you can show!
+liste when we initialize git automatically it will create one branch which is master if we want another person want wo...yeah I understood , thanks ,everything , where it present in GitHub? yeah
+call me i will explain 
+if you want know more about branches or read or watch it in youtube
+
+just rename branch master to main
+
+Fine and everything , just i need wat commands will use enough remaining i will watch yt...because Thursday i hv to show ppt

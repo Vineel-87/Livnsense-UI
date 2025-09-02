@@ -1,0 +1,1 @@
+{"name": "test_login", "status": "passed", "steps": [{"name": "Navigate to login page", "start": 1748344810103}], "start": 1748344810103, "stop": 1748344837963, "uuid": "9a84bfcf-9a6e-4da8-b055-5ea8dafd625a", "testCaseId": "047707164da20c6181719879e9accf72", "fullName": "Features.Tests.10_test_users_manage.TestDashboardWorkflow#test_login"}

@@ -1,0 +1,5 @@
+email,username,name,role,contact_details,status,gates,vehicles
+pydi.vineel@livnsense.com,pydivineell,pvineel,Admin,9876754321,Active,"""Shutter-Gate,Tow-Gangway""","""Forklift-001"""
+pydi.vineel@livnsense.com,pydivineellss,pvineell,Admin,8876754321,Active,"""Material-Gangway""","""Forklift-001"""
+pydi.vineel@livnsense.com,123456778,pvineell3,Admin,1.11111E+11,Active,"""Material-Gangway,Shutter-Gate""","""Forklift-001"""
+pydi.vineel@livnsense.com,pydivineellsss,pvineellm,Admin,8876754321,Active,"""Material-Gangway""","""Forklift-001"""

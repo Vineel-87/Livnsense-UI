@@ -1,0 +1,14 @@
+Gate selection failed for Zk127_user12345: Gate mismatch for Zk127_user12345. Expected: ['Material-Gangway', 'Tow-Gangway'], Got: []
+assert set() == {'Material-Ga...'Tow-Gangway'}
+  
+  Extra items in the right set:
+  'Tow-Gangway'
+  'Material-Gangway'
+  Use -v to get more diff
+Failed to process user Zk127_user12345: Gate mismatch for Zk127_user12345. Expected: ['Material-Gangway', 'Tow-Gangway'], Got: []
+assert set() == {'Material-Ga...'Tow-Gangway'}
+  
+  Extra items in the right set:
+  'Tow-Gangway'
+  'Material-Gangway'
+  Use -v to get more diff

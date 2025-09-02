@@ -1,0 +1,4 @@
+
+(.venv) PS C:\Users\User\PycharmProjects\LivnsenseTestingBDD> pytest --alluredir=./reports/allure-results --clean-alluredir
+ C:\Users\User\PycharmProjects\LivnsenseTestingBDD> allure generate ./reports/allure-results -o ./reports/allure-report --clean
+ allure open ./reports/allure-report
